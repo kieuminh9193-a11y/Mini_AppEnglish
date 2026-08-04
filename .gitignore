@@ -1,0 +1,10 @@
+# Ignore everything by default
+/*
+
+# Track .gitignore and 04.English_lesson directory
+!.gitignore
+!04.English_lesson/
+
+# Exclude private credential JSON key files
+04.English_lesson/english-lesson-4-firebase-adminsdk-fbsvc-*.json
+*-firebase-adminsdk-*.json

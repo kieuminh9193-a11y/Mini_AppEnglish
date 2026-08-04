@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>English Lesson: This Is Me!</title>
+    <!-- Kid friendly font -->
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind = {
+            config: {
+                corePlugins: {
+                    preflight: false,
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="style.css">
+    <script src="data.js"></script>
+    <script src="pet-data.js"></script>
+</head>
+<body>
+    <div id="app-container">
+        
+        <!-- PET SELECT VIEW (First time only) -->
+        <section id="pet-select-view" class="view">
+            <h1 class="bounce-in">Chọn Bạn Đồng Hành! 🐾</h1>
+            <p>Hãy chọn một linh vật để cùng học nhé!</p>
+            <div class="pet-select-grid">
+                <div class="pet-select-card" onclick="app.previewPet('cat')">
+                    <img src="assets/pets/cat_baby_idle.png" alt="Mèo" class="pet-select-img">
+                    <h3>🐱 Mèo Mimi</h3>
+                    <p>Dễ thương, hay nũng nịu</p>
+                </div>
+                <div class="pet-select-card" onclick="app.previewPet('dog')">
+                    <img src="assets/pets/dog_baby_idle.png" alt="Cún" class="pet-select-img">
+                    <h3>🐶 Cún Bobo</h3>
+                    <p>Năng động, vui vẻ</p>
+                </div>
+                <div class="pet-select-card" onclick="app.previewPet('bunny')">
+                    <img src="assets/pets/bunny_baby_idle.png" alt="Thỏ" class="pet-select-img">
+                    <h3>🐰 Thỏ Bunny</h3>
+                    <p>Thông minh, nhanh nhẹn</p>
+                </div>
+            </div>
+            <!-- Name input (shown after selection) -->
+            <div id="pet-name-form" class="pet-name-form hidden">
+                <p>Đặt tên cho bé nào! 💕</p>
+                <input type="text" id="pet-name-input" placeholder="Nhập tên..." maxlength="12" class="pet-name-input">
+                <button class="btn primary" onclick="app.confirmPetAdoption()">Nhận Nuôi! 🎉</button>
+            </div>
+        </section>
+
+        <!-- HOME VIEW (Unit Selection) -->
+        <section id="home-view" class="view">
+            <!-- Pet Status Bar -->
+            <div id="pet-status-bar" class="pet-status-bar hidden" onclick="app.showView('pet-room-view')">
+                <img id="home-pet-avatar" src="" alt="Pet" class="pet-avatar-small">
+                <div class="pet-status-info">
+                    <span id="home-pet-name" class="pet-name-label">Mimi</span>
+                    <div class="xp-bar-mini">
+                        <div id="home-xp-fill" class="xp-bar-fill" style="width: 0%"></div>
+                    </div>
+                </div>
+                <span id="home-xp-text" class="xp-text">0 XP</span>
+            </div>
+
+            <h1 class="bounce-in">English Lessons 🚀</h1>
+            <p>Chọn bài học để bắt đầu nhé!</p>
+            <div class="unit-list">
+                <button class="btn primary" onclick="app.selectUnit('unit1')">Unit 1: This is me</button>
+                <button class="btn secondary" onclick="app.selectUnit('unit2')">Unit 2: Sight words letter E</button>
+                <button class="btn accent" onclick="app.selectUnit('unit_mc')" style="background: linear-gradient(135deg, #4f46e5 0%, #0ea5e9 100%); color: white;">Unit MC: Bé Tập Đọc</button>
+            </div>
+        </section>
+
+        <!-- PET ROOM VIEW -->
+        <section id="pet-room-view" class="view">
+            <button class="btn back-btn" onclick="app.showView('home-view')">⬅️ Về Trang Chủ</button>
+            <h2>Phòng của <span id="pet-room-name">Mimi</span> 🏠</h2>
+            
+            <div class="pet-room-container">
+                <!-- Pet Display Area -->
+                <div class="pet-display-area">
+                    <div id="pet-stage-label" class="pet-stage-label">🐣 Sơ sinh</div>
+                    <div class="pet-image-wrapper">
+                        <img id="pet-room-image" src="" alt="Pet" class="pet-room-img pet-anim-idle">
+                        <div id="pet-particles" class="pet-particles"></div>
+                    </div>
+                    <div id="pet-mood-label" class="pet-mood-label">😊 Vui vẻ</div>
+                </div>
+
+                <!-- XP Bar -->
+                <div class="pet-xp-section">
+                    <div class="xp-bar-large">
+                        <div id="pet-xp-fill" class="xp-bar-fill" style="width: 50%"></div>
+                    </div>
+                    <div class="xp-info-row">
+                        <span id="pet-level-text">Level 2</span>
+                        <span id="pet-xp-text">💰 0 XP</span>
+                    </div>
+                </div>
+
+                <!-- Care Buttons -->
+                <div class="care-buttons">
+                    <button class="care-btn" onclick="app.doPetCare('feed')">
+                        <span class="care-icon">🍎</span>
+                        <span class="care-label">Cho ăn</span>
+                        <span class="care-cost">-5 XP</span>
+                    </button>
+                    <button class="care-btn" onclick="app.doPetCare('bath')">
+                        <span class="care-icon">🛁</span>
+                        <span class="care-label">Tắm rửa</span>
+                        <span class="care-cost">Miễn phí</span>
+                    </button>
+                    <button class="care-btn" onclick="app.doPetCare('brush')">
+                        <span class="care-icon">🪥</span>
+                        <span class="care-label">Đánh răng</span>
+                        <span class="care-cost">Miễn phí</span>
+                    </button>
+                    <button class="care-btn" onclick="app.doPetCare('play')">
+                        <span class="care-icon">🎾</span>
+                        <span class="care-label">Chơi</span>
+                        <span class="care-cost">Miễn phí</span>
+                    </button>
+                    <button class="care-btn" onclick="app.doPetCare('sleep')">
+                        <span class="care-icon">😴</span>
+                        <span class="care-label">Ru ngủ</span>
+                        <span class="care-cost">Miễn phí</span>
+                    </button>
+                    <button class="care-btn" onclick="app.showView('pet-shop-view')">
+                        <span class="care-icon">🛍️</span>
+                        <span class="care-label">Shop</span>
+                        <span class="care-cost">Mua đồ</span>
+                    </button>
+                </div>
+
+                <!-- Pet switcher (if 2 pets) -->
+                <div id="pet-switcher" class="pet-switcher hidden">
+                    <button class="btn secondary" onclick="app.switchActivePet(0)" id="switch-pet-0">Pet 1</button>
+                    <button class="btn secondary" onclick="app.switchActivePet(1)" id="switch-pet-1">Pet 2</button>
+                </div>
+                <div id="adopt-second-btn" class="hidden" style="margin-top:10px;">
+                    <button class="btn accent" onclick="app.showView('pet-select-view')">🐾 Nhận thêm bạn mới!</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- PET SHOP VIEW -->
+        <section id="pet-shop-view" class="view">
+            <button class="btn back-btn" onclick="app.showView('pet-room-view')">⬅️ Quay Lại</button>
+            <h2>🛍️ Cửa Hàng Phụ Kiện</h2>
+            <p id="shop-xp-display">💰 XP hiện có: <strong>0</strong></p>
+            <div id="shop-items-grid" class="shop-grid">
+                <!-- Generated by JS -->
+            </div>
+        </section>
+
+        <!-- MENU VIEW (Game Selection) -->
+        <section id="menu-view" class="view">
+            <button class="btn back-btn" onclick="app.showView('home-view')">⬅️ Chọn bài khác</button>
+            <h1 class="bounce-in" id="menu-title">Unit 1: This is me</h1>
+            <p>Chọn phần học nha bé!</p>
+            <div class="menu-buttons">
+                <button class="btn primary btn-bounce" onclick="app.showView('video-view')">
+                    <span class="icon">📺</span> Xem Video
+                </button>
+                <button class="btn secondary btn-bounce" onclick="app.showView('game1-view', 'emoji')">
+                    <span class="icon">🎮</span> Lật Hình Giống Nhau
+                </button>
+                <button class="btn secondary btn-bounce" onclick="app.showView('game1-view', 'word')">
+                    <span class="icon">🔠</span> Lật Chữ Giống Nhau
+                </button>
+                <button class="btn accent btn-bounce" onclick="app.showView('game2-view')">
+                    <span class="icon">👂</span> Nghe & Chọn
+                </button>
+                <button class="btn primary btn-bounce" onclick="app.showView('game3-view')" style="background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%);">
+                    <span class="icon">📖</span> Tập Đọc
+                </button>
+                <button class="btn accent btn-bounce" onclick="app.showView('game4-view')" style="background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);">
+                    <span class="icon">✍️</span> Bé Tập Điền Từ
+                </button>
+            </div>
+        </section>
+
+        <!-- VIDEO VIEW -->
+        <section id="video-view" class="view">
+            <button class="btn back-btn" onclick="app.goBack()">⬅️ Quay Lại</button>
+            <h2>Học Từ Vựng</h2>
+            <div class="video-layout">
+                <div class="video-left">
+                    <div class="video-container">
+                        <video id="lesson-video" controls playsinline webkit-playsinline>
+                            <source src="REF/3663094155105559082.mp4" type="video/mp4">
+                            Trình duyệt của bạn không hỗ trợ video.
+                        </video>
+                        <div id="video-caption" class="video-caption">Hãy bấm Play để xem video!</div>
+                    </div>
+                    <div class="video-controls-wrap">
+                        <label for="video-speed">Tốc độ:</label>
+                        <select id="video-speed" onchange="app.changeVideoSpeed(this.value)">
+                            <option value="0.5">0.5x (Rất chậm)</option>
+                            <option value="0.75">0.75x (Chậm)</option>
+                            <option value="1" selected>1.0x (Bình thường)</option>
+                            <option value="1.25">1.25x (Nhanh)</option>
+                            <option value="1.5">1.5x (Rất nhanh)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="transcript-container" id="interactive-transcript">
+                    <!-- Transcript generated by JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- GAME 1: MEMORY -->
+        <section id="game1-view" class="view">
+            <button class="btn back-btn" onclick="app.goBack()">⬅️ Quay Lại</button>
+            <h2 id="memory-title">Lật Hình Giống Nhau</h2>
+            <div class="score-board">Điểm: <span id="memory-score">0</span></div>
+            <div id="memory-board" class="memory-board">
+                <!-- Cards will be generated here -->
+            </div>
+            <button id="restart-memory-btn" class="btn primary hidden" onclick="app.startMemoryGame(app.currentMemoryMode)">Chơi Lại!</button>
+        </section>
+
+        <!-- GAME 2: LISTEN & CHOOSE -->
+        <section id="game2-view" class="view">
+            <button class="btn back-btn" onclick="app.goBack()">⬅️ Quay Lại</button>
+            <h2>Nghe & Chọn Đúng</h2>
+            <div class="score-board">Câu đúng: <span id="listen-score">0</span> / 6</div>
+            
+            <div class="listen-container">
+                <button id="play-sound-btn" class="btn huge btn-bounce" onclick="app.playCurrentWord()">
+                    🔊 Nghe
+                </button>
+                <p class="hint">Click loa để nghe và chọn từ bên dưới</p>
+                <div id="options-board" class="options-board">
+                    <!-- Options will be generated here -->
+                </div>
+                <button id="confirm-listen-btn" class="btn primary hidden" onclick="app.confirmListenAnswer()" style="margin-top: 15px;">Xác nhận</button>
+            </div>
+            <button id="restart-listen-btn" class="btn primary hidden" onclick="app.startListenGame()">Chơi Lại!</button>
+        </section>
+
+        <!-- GAME 3: READ ALONG -->
+        <section id="game3-view" class="view">
+            <button class="btn back-btn" onclick="app.goBack()">⬅️ Quay Lại</button>
+            <h2>Cùng Tập Đọc Nhé!</h2>
+            
+            <div class="read-along-container">
+                <div class="speed-controls">
+                    <label><input type="radio" name="speed" value="0.5"> 🐢 Chậm</label>
+                    <label><input type="radio" name="speed" value="0.8" checked> 🚶 Thường</label>
+                    <label><input type="radio" name="speed" value="1.2"> 🐇 Nhanh</label>
+                </div>
+                
+                <div id="read-card" class="read-card">
+                    <!-- Text and image will be injected here -->
+                </div>
+                <div class="read-controls">
+                    <button class="btn secondary" onclick="app.prevReadSentence()">⬅️ Câu Trước</button>
+                    <button class="btn accent huge-read-btn btn-bounce" onclick="app.playReadSentence()">🔊 Nghe</button>
+                    <button class="btn secondary" onclick="app.nextReadSentence()">Câu Tiếp ➡️</button>
+                </div>
+                <p class="read-progress" id="read-progress">1 / 5</p>
+            </div>
+        </section>
+
+        <!-- GAME 4: FILL IN THE BLANKS -->
+        <section id="game4-view" class="view">
+            <button class="btn back-btn" onclick="app.goBack()">⬅️ Quay Lại</button>
+            <h2>Bé Tập Điền Từ</h2>
+            <div class="score-board">Câu đúng: <span id="fill-score">0</span> / <span id="fill-total">0</span></div>
+            
+            <div class="fill-container">
+                <div id="fill-question-card" class="fill-question-card">
+                    <!-- Sentence or word with blank will be injected here -->
+                </div>
+                <div id="fill-options-board" class="fill-options-board">
+                    <!-- Option buttons will be injected here -->
+                </div>
+                <button id="confirm-fill-btn" class="btn primary hidden" onclick="app.confirmFillAnswer()" style="margin-top: 20px;">Xác nhận</button>
+            </div>
+            <button id="restart-fill-btn" class="btn primary hidden" onclick="app.startFillGame()">Chơi Lại!</button>
+        </section>
+
+        <!-- UNIT MC: BÉ TẬP ĐỌC -->
+        <section id="unit-mc-view" class="view pb-12" style="background-color: #fffbeb;">
+            <!-- Header -->
+            <header class="bg-gradient-to-r from-indigo-600 to-sky-500 text-white shadow-md py-4 px-6 mb-6 rounded-2xl w-full flex justify-between items-center box-border">
+                <div class="flex items-center gap-3">
+                    <button onclick="app.showView('home-view')" class="text-white hover:text-amber-200 transition font-bold mr-2 text-xl bg-transparent border-0 cursor-pointer">⬅️ Về</button>
+                    <div class="bg-white/20 p-2 rounded-2xl text-2xl shadow-inner hidden md:block">
+                        🎨
+                    </div>
+                    <div class="text-left">
+                        <h1 class="text-lg md:text-xl font-bold leading-tight m-0 text-white">Bé Tập Đọc Qua Hình Ảnh</h1>
+                        <p class="text-[10px] text-sky-100 m-0">Hình ảnh minh họa • Dễ nhớ • Phát âm chuẩn</p>
+                    </div>
+                </div>
+
+                <!-- Badge chế độ -->
+                <div class="bg-white/10 backdrop-blur-md px-3 py-1.5 rounded-xl text-xs font-semibold text-white flex items-center gap-1.5 border border-white/20">
+                    <i class="fa-solid fa-shapes text-amber-300"></i>
+                    <span>Thẻ Từ Vựng</span>
+                </div>
+            </header>
+
+            <!-- Container chính -->
+            <div class="w-full max-w-3xl mx-auto px-4 text-left box-border">
+
+                <!-- Mode Selector Tabs -->
+                <div class="flex gap-3 mb-6 justify-center flex-wrap">
+                    <button id="mc-btn-read" class="px-5 py-2.5 rounded-xl font-bold text-sm bg-indigo-600 text-white border-0 shadow-md cursor-pointer transition active:scale-95" onclick="app.switchMCMode('read')" style="background: linear-gradient(135deg, #4f46e5 0%, #0ea5e9 100%);">
+                        📖 Tập Đọc Cụm Từ
+                    </button>
+                    <button id="mc-btn-read-sentence" class="px-5 py-2.5 rounded-xl font-bold text-sm bg-white text-slate-700 border border-slate-200 shadow-sm cursor-pointer transition hover:bg-slate-50 active:scale-95" onclick="app.switchMCMode('read_sentence')">
+                        💬 Tập Đọc Cả Câu
+                    </button>
+                    <button id="mc-btn-listen" class="px-5 py-2.5 rounded-xl font-bold text-sm bg-white text-slate-700 border border-slate-200 shadow-sm cursor-pointer transition hover:bg-slate-50 active:scale-95" onclick="app.switchMCMode('listen')">
+                        👂 Bé Tập Nghe
+                    </button>
+                    <button id="mc-btn-memory" class="px-5 py-2.5 rounded-xl font-bold text-sm bg-white text-slate-700 border border-slate-200 shadow-sm cursor-pointer transition hover:bg-slate-50 active:scale-95 animate-bounce" onclick="app.showView('game1-view', 'word')">
+                        🔤 Lật Chữ Tìm Cặp
+                    </button>
+                </div>
+
+                <!-- PANEL 1: BÉ TẬP ĐỌC -->
+                <div id="mc-read-panel" class="w-full">
+                    <!-- Bảng cài đặt Tốc độ & Giọng đọc -->
+                    <div class="bg-white rounded-2xl shadow-sm border border-amber-200/80 p-4 mb-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
+                            
+                            <!-- Thanh trượt tốc độ -->
+                            <div>
+                                <div class="flex justify-between items-center mb-1">
+                                    <label for="mcSpeedRange" class="text-xs font-bold text-slate-600 flex items-center gap-1.5">
+                                        <i class="fa-solid fa-gauge-simple-high text-sky-500"></i> Tốc độ đọc cho bé:
+                                    </label>
+                                    <span id="mcSpeedValue" class="text-xs font-bold text-sky-600 bg-sky-50 px-2 py-0.5 rounded-md">0.7x (Chậm)</span>
+                                </div>
+                                <input type="range" id="mcSpeedRange" min="0.4" max="1.2" step="0.1" value="0.7" oninput="app.updateMCSpeed(this.value)" class="w-full accent-sky-500 cursor-pointer">
+                            </div>
+
+                            <!-- Công tắc Tự Động Chuyển Cụm -->
+                            <div class="flex items-center justify-between bg-slate-50 p-2.5 rounded-xl border border-slate-200">
+                                <div class="flex items-center gap-2">
+                                    <i class="fa-solid fa-forward-step text-indigo-500"></i>
+                                    <span class="text-xs font-bold text-slate-700">Tự chuyển bài tiếp</span>
+                                </div>
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" id="mcAutoAdvanceToggle" class="sr-only peer" checked>
+                                    <div class="w-9 h-5 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-indigo-600"></div>
+                                </label>
+                            </div>
+
+                        </div>
+
+                        <!-- Chọn giọng đọc & Tắt/Mở nghĩa tiếng Việt -->
+                        <div class="mt-3 pt-3 border-t border-slate-100 flex flex-wrap justify-between items-center gap-3">
+                            <div class="flex items-center gap-2 flex-1 min-w-[200px]">
+                                <label for="mcVoiceSelect" class="text-xs font-bold text-slate-500 whitespace-nowrap">
+                                    <i class="fa-solid fa-circle-user text-sky-500 mr-1"></i>Giọng đọc:
+                                </label>
+                                <select id="mcVoiceSelect" class="w-full bg-slate-50 border border-slate-200 text-slate-700 text-xs rounded-lg p-1.5 focus:ring-2 focus:ring-sky-500 focus:outline-none">
+                                    <option value="">Đang tải giọng đọc...</option>
+                                </select>
+                            </div>
+
+                            <!-- Toggle hiển thị tiếng Việt -->
+                            <button onclick="app.toggleMCVietnameseSub()" id="mcSubToggleBtn" class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold px-3 py-1.5 rounded-lg border border-slate-200 transition flex items-center gap-1.5 cursor-pointer">
+                                <i class="fa-solid fa-language text-indigo-500"></i>
+                                <span id="mcSubToggleText">Ẩn tiếng Việt</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- KHUNG TẬP ĐỌC HÌNH ẢNH CHÍNH -->
+                    <div id="mcMainCard" class="bg-white rounded-3xl shadow-md border-2 border-slate-100 p-6 md:p-8 text-center relative overflow-hidden transition-all duration-300 box-border">
+                        
+                        <!-- Thanh tiến trình -->
+                        <div class="w-full bg-slate-100 h-2.5 rounded-full mb-6 overflow-hidden">
+                            <div id="mcProgressBar" class="bg-gradient-to-r from-sky-400 to-indigo-600 h-full transition-all duration-300" style="width: 0%;"></div>
+                        </div>
+
+                        <!-- Thẻ thông tin câu / cụm -->
+                        <div class="flex justify-between items-center mb-4">
+                            <span id="mcStepBadge" class="px-3.5 py-1 rounded-full text-xs font-bold bg-sky-100 text-sky-700 flex items-center gap-1.5">
+                                <!-- Render badge -->
+                            </span>
+                            <span class="text-xs font-bold text-slate-400">
+                                Bước <span id="mcCurrentStepNum" class="text-sky-600 text-sm">1</span>/<span id="mcTotalStepsNum">15</span>
+                            </span>
+                        </div>
+
+                        <!-- Tiêu đề hướng dẫn -->
+                        <div id="mcStepInstruction" class="text-xs font-bold text-slate-400 mb-3 uppercase tracking-wider">
+                            <!-- Lời khuyên đọc -->
+                        </div>
+
+                        <!-- KHUNG THẺ TỪ VỰNG KÈM HÌNH ẢNH -->
+                        <div id="mcTextDisplay" class="flex flex-wrap items-center justify-center gap-2.5 py-4 min-h-[180px]">
+                            <!-- Các thẻ hình ảnh từ vựng sẽ render ở đây -->
+                        </div>
+
+                        <!-- Nút phát âm chính -->
+                        <div class="mt-6 flex justify-center gap-3">
+                            <button id="mcPlayBtn" onclick="app.playMCCurrentStep()" class="bg-gradient-to-r from-sky-500 to-indigo-600 hover:from-sky-600 hover:to-indigo-700 active:scale-95 text-white font-bold text-lg px-8 py-3.5 rounded-2xl shadow-lg shadow-sky-500/30 transition flex items-center gap-3 border-0 cursor-pointer">
+                                <i class="fa-solid fa-volume-high text-xl"></i>
+                                <span id="mcPlayBtnText">Nghe đọc cụm này</span>
+                            </button>
+
+                            <button id="mcStopBtn" onclick="app.stopMCSpeech()" class="hidden bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold px-4 py-3.5 rounded-2xl transition border-0 cursor-pointer">
+                                <i class="fa-solid fa-square"></i>
+                            </button>
+                        </div>
+
+                    </div>
+
+                    <!-- Nút điều hướng Qua / Lại -->
+                    <div class="mt-5 flex items-center justify-between gap-3">
+                        <button id="mcPrevBtn" onclick="app.changeMCStep(-1)" class="flex-1 bg-white hover:bg-slate-50 text-slate-700 font-bold py-3.5 px-4 rounded-2xl border border-slate-200 shadow-sm transition flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer">
+                            <i class="fa-solid fa-arrow-left"></i>
+                            <span>Cụm trước</span>
+                        </button>
+
+                        <button id="mcNextBtn" onclick="app.changeMCStep(1)" class="flex-1 bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3.5 px-4 rounded-2xl shadow-md transition flex items-center justify-center gap-2 border-0 cursor-pointer">
+                            <span>Cụm tiếp</span>
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- PANEL 2: BÉ TẬP NGHE FULL BÀI -->
+                <div id="mc-listen-panel" class="hidden w-full">
+                    <!-- Bảng cài đặt Tốc độ & Giọng đọc -->
+                    <div class="bg-white rounded-2xl shadow-sm border border-amber-200/80 p-4 mb-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
+                            
+                            <!-- Thanh trượt tốc độ -->
+                            <div>
+                                <label for="mcListenSpeedRange" class="block text-xs font-bold text-slate-400 mb-2 uppercase tracking-wider">Tốc độ nghe:</label>
+                                <div class="flex items-center gap-3">
+                                    <input type="range" id="mcListenSpeedRange" min="0.5" max="1.5" step="0.1" value="0.8" class="flex-1 h-2 bg-slate-100 rounded-lg appearance-none cursor-pointer accent-amber-500" oninput="app.updateMCListenSpeed(this.value)">
+                                    <span id="mcListenSpeedValue" class="text-sm font-bold text-amber-600 min-w-[70px] text-right">0.8x (Chậm)</span>
+                                </div>
+                            </div>
+                            
+                            <!-- Chọn giọng đọc -->
+                            <div>
+                                <label for="mcListenVoiceSelect" class="block text-xs font-bold text-slate-400 mb-2 uppercase tracking-wider">Giọng đọc:</label>
+                                <select id="mcListenVoiceSelect" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm font-semibold text-slate-700 focus:outline-none focus:border-amber-500 transition cursor-pointer">
+                                    <!-- Options generated by JS -->
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Lặp lại & Cấp độ tự động -->
+                        <div class="mt-4 pt-4 border-t border-slate-100 flex items-center justify-between flex-wrap gap-4 select-none">
+                            <div class="flex items-center gap-4 flex-wrap">
+                                <label class="flex items-center gap-2 text-xs font-bold text-slate-500 cursor-pointer">
+                                    <input type="checkbox" id="mcListenLoopToggle" class="w-4 h-4 text-amber-500 rounded border-slate-300 focus:ring-amber-500 cursor-pointer" onchange="app.toggleMCListenLoop(this.checked)">
+                                    <span>🔁 Tự Động Lặp Lại</span>
+                                </label>
+                                <label class="flex items-center gap-2 text-xs font-bold text-slate-500 cursor-pointer">
+                                    <input type="checkbox" id="mcListenAutoSpeedToggle" class="w-4 h-4 text-amber-500 rounded border-slate-300 focus:ring-amber-500 cursor-pointer" onchange="app.toggleMCListenAutoSpeed(this.checked)">
+                                    <span>⚡ Đọc 2 Cấp Độ (Chậm ➡️ Thường)</span>
+                                </label>
+                            </div>
+                            <div id="mcListenStatus" class="text-sm font-semibold text-slate-600">
+                                <span class="text-slate-400">Chưa phát</span>
+                            </div>
+                        </div>
+
+                        <!-- Các nút điều khiển nghe -->
+                        <div class="mt-4 pt-4 border-t border-slate-100 flex justify-center gap-3">
+                            <button id="mcListenPlayBtn" onclick="app.playMCListening()" class="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 active:scale-95 text-white font-bold text-lg px-8 py-3.5 rounded-2xl shadow-lg shadow-amber-500/30 transition flex items-center gap-3 border-0 cursor-pointer">
+                                <i class="fa-solid fa-play text-xl"></i>
+                                <span>Nghe Toàn Bộ Bài</span>
+                            </button>
+                            <button id="mcListenStopBtn" onclick="app.stopMCListening()" class="hidden bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold px-6 py-3.5 rounded-2xl transition border-0 cursor-pointer flex items-center gap-2">
+                                <i class="fa-solid fa-square"></i>
+                                <span>Dừng</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Khung Transcript hiển thị hội thoại/bài viết -->
+                    <div class="bg-white rounded-3xl shadow-md border border-slate-100 p-6 md:p-8 text-center relative overflow-hidden box-border">
+                        <div class="text-xs font-bold text-slate-400 mb-4 uppercase tracking-wider">
+                            Bấm nút để nghe toàn bộ, hoặc chọn từng câu để nghe riêng lẻ:
+                        </div>
+                        
+                        <div id="mcListenTranscriptDisplay" class="flex flex-col gap-3 max-h-[400px] overflow-y-auto pr-2">
+                            <!-- Generated by JS -->
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+
+            <!-- Banner từ vừa đọc -->
+            <div id="mcActiveWordBanner" class="fixed bottom-4 left-1/2 -translate-x-1/2 bg-slate-900/90 backdrop-blur-md text-white px-5 py-2.5 rounded-2xl shadow-xl flex items-center gap-3 opacity-0 transition-opacity duration-200 pointer-events-none z-50">
+                <span id="mcActiveWordIcon" class="text-xl"></span>
+                <div class="text-left">
+                    <div class="text-[10px] text-slate-400 uppercase tracking-wider">Từ đang đọc:</div>
+                    <div class="text-base font-bold text-amber-300" id="mcActiveWordText"></div>
+                </div>
+            </div>
+
+        <!-- XP POPUP -->
+        <div id="xp-popup" class="xp-popup hidden">
+            <span id="xp-popup-text">+20 XP! 🎉</span>
+        </div>
+
+    </div>
+
+    <!-- Confetti Library -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
