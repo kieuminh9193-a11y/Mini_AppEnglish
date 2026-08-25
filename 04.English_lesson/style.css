@@ -1241,3 +1241,36 @@ video {
     transform: scale(1.02);
     box-shadow: 0 4px 12px rgba(245, 158, 11, 0.15);
 }
+
+/* Unit 4 Vietnamese Game Animations & Classes */
+@keyframes bounceSlow {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+.animate-bounce-slow {
+  animation: bounceSlow 3s infinite ease-in-out;
+}
+
+@keyframes pulseSlow {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.03); opacity: 0.95; }
+}
+.animate-pulse-slow {
+  animation: pulseSlow 4s infinite ease-in-out;
+}
+
+/* Custom scrollbar for base list */
+#u4-base-list::-webkit-scrollbar {
+  width: 6px;
+}
+#u4-base-list::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 10px;
+}
+#u4-base-list::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 10px;
+}
+#u4-base-list::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}

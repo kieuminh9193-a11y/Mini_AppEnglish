@@ -359,6 +359,11 @@ const app = {
             this.showView('unit-mc-view');
             return;
         }
+        if (unitId === 'unit4') {
+            this.currentUnitId = unitId;
+            this.showView('unit4-view');
+            return;
+        }
         if (LESSON_DATA[unitId]) {
             this.currentUnitId = unitId;
             const unit = LESSON_DATA[unitId];
@@ -492,6 +497,8 @@ const app = {
             this.startFillGame();
         } else if (viewId === 'unit-mc-view') {
             this.startUnitMC();
+        } else if (viewId === 'unit4-view') {
+            this.initU4();
         } else if (viewId === 'pet-room-view') {
             this.renderPetRoom();
         } else if (viewId === 'pet-shop-view') {
@@ -1751,6 +1758,349 @@ const app = {
         if (stopBtn) stopBtn.classList.add('hidden');
         
         this.updateMCListenStatus();
+    },
+
+    // ====== UNIT 4: TẬP ĐÁNH VẦN & THÊM DẤU TIẾNG VIỆT LOGIC ======
+    u4CurrentBaseIndex: 0,
+    u4CurrentTone: 'không',
+    u4QuizQuestions: [],
+    u4QuizIndex: 0,
+    u4QuizScore: 0,
+    u4ActiveMode: 'deck',
+    u4TonesDict: {
+        "không": "Không dấu",
+        "sắc": "Sắc",
+        "huyền": "Huyền",
+        "hỏi": "Hỏi",
+        "ngã": "Ngã",
+        "nặng": "Nặng"
+    },
+
+    initU4() {
+        this.u4CurrentBaseIndex = 0;
+        this.u4CurrentTone = 'không';
+        this.u4ActiveMode = 'deck';
+        this.updateU4XPDisplay();
+        this.renderU4BaseList();
+        this.renderU4Card();
+        
+        // Show default panel
+        document.getElementById('u4-deck-panel').classList.remove('hidden');
+        document.getElementById('u4-quiz-panel').classList.add('hidden');
+        
+        const btnDeck = document.getElementById('u4-btn-deck');
+        const btnQuiz = document.getElementById('u4-btn-quiz');
+        if (btnDeck) {
+            btnDeck.className = "px-5 py-2.5 rounded-xl font-bold text-sm text-white border-0 shadow-md cursor-pointer transition active:scale-95";
+            btnDeck.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
+        }
+        if (btnQuiz) {
+            btnQuiz.className = "px-5 py-2.5 rounded-xl font-bold text-sm bg-white text-slate-700 border border-slate-200 shadow-sm cursor-pointer transition hover:bg-slate-50";
+            btnQuiz.style.background = 'none';
+        }
+    },
+
+    updateU4XPDisplay() {
+        const xpText = `${petManager.xp} XP`;
+        const u4Xp = document.getElementById('unit4-xp-text');
+        if (u4Xp) u4Xp.textContent = xpText;
+        
+        const petAvatar = document.getElementById('unit4-pet-avatar');
+        if (petAvatar && this.selectedPetType) {
+            petAvatar.src = `assets/pets/${this.selectedPetType}_baby_idle.png`;
+        }
+    },
+
+    renderU4BaseList() {
+        const container = document.getElementById('u4-base-list');
+        if (!container) return;
+        
+        const bases = LESSON_DATA.unit4.bases;
+        container.innerHTML = bases.map((b, idx) => {
+            const activeClass = (idx === this.u4CurrentBaseIndex) ? 'border-emerald-500 bg-emerald-50 text-emerald-800' : 'border-slate-100 bg-white text-slate-700';
+            return `
+                <button onclick="app.selectU4Base(${idx})" class="w-full text-left p-3.5 rounded-2xl border-2 font-black text-lg transition duration-200 cursor-pointer flex items-center justify-between ${activeClass}">
+                    <span>${b.base}</span>
+                    <span class="text-xs font-bold text-slate-400 bg-slate-100 px-2.5 py-1 rounded-full">${Object.keys(b.words).length} từ</span>
+                </button>
+            `;
+        }).join('');
+    },
+
+    selectU4Base(idx) {
+        this.u4CurrentBaseIndex = idx;
+        const baseObj = LESSON_DATA.unit4.bases[idx];
+        
+        if (!baseObj.words[this.u4CurrentTone]) {
+            this.u4CurrentTone = 'không';
+        }
+        
+        this.renderU4BaseList();
+        this.renderU4Card();
+        this.speakU4CurrentWord();
+    },
+
+    selectU4Tone(tone) {
+        const baseObj = LESSON_DATA.unit4.bases[this.u4CurrentBaseIndex];
+        if (!baseObj.words[tone]) return;
+        
+        this.u4CurrentTone = tone;
+        this.renderU4Card();
+        this.speakU4CurrentWord();
+    },
+
+    renderU4Card() {
+        const baseObj = LESSON_DATA.unit4.bases[this.u4CurrentBaseIndex];
+        const wordData = baseObj.words[this.u4CurrentTone];
+        if (!wordData) return;
+
+        document.getElementById('u4-card-emoji').textContent = wordData.emoji;
+        document.getElementById('u4-card-word').textContent = wordData.word;
+        document.getElementById('u4-card-meaning').textContent = wordData.meaning;
+        document.getElementById('u4-card-spelling').textContent = wordData.spell;
+
+        const tones = ['không', 'sắc', 'huyền', 'hỏi', 'ngã', 'nặng'];
+        tones.forEach(tone => {
+            const btn = document.getElementById(`u4-tone-${tone}`);
+            if (!btn) return;
+
+            const isSupported = !!baseObj.words[tone];
+            if (!isSupported) {
+                btn.className = "flex flex-col items-center gap-1 p-3.5 rounded-2xl border-2 border-slate-100 bg-slate-50 opacity-20 pointer-events-none transition";
+            } else if (tone === this.u4CurrentTone) {
+                btn.className = "flex flex-col items-center gap-1 p-3.5 rounded-2xl border-2 border-emerald-500 bg-emerald-50 text-emerald-800 scale-105 shadow-sm active:scale-95 transition cursor-pointer";
+            } else {
+                btn.className = "flex flex-col items-center gap-1 p-3.5 rounded-2xl border-2 border-slate-100 bg-slate-50 hover:bg-slate-100 active:scale-95 transition cursor-pointer";
+            }
+        });
+    },
+
+    speakU4CurrentWord() {
+        const baseObj = LESSON_DATA.unit4.bases[this.u4CurrentBaseIndex];
+        const wordData = baseObj.words[this.u4CurrentTone];
+        if (!wordData) return;
+
+        const spellText = wordData.spell.replace(/-/g, ', ');
+        const speechString = `${spellText}, ... , ${wordData.word}`;
+        
+        this.speakU4Text(speechString);
+    },
+
+    speakU4Text(text, rate = 0.85) {
+        return new Promise((resolve) => {
+            window.speechSynthesis.cancel();
+            const utterance = new SpeechSynthesisUtterance(text);
+            const viVoice = window.speechSynthesis.getVoices().find(v => v.lang.startsWith('vi'));
+            if (viVoice) {
+                utterance.voice = viVoice;
+            }
+            utterance.lang = 'vi-VN';
+            utterance.rate = rate;
+            utterance.onend = () => resolve();
+            utterance.onerror = () => resolve();
+            window.speechSynthesis.speak(utterance);
+        });
+    },
+
+    switchU4Mode(mode) {
+        this.u4ActiveMode = mode;
+        const btnDeck = document.getElementById('u4-btn-deck');
+        const btnQuiz = document.getElementById('u4-btn-quiz');
+
+        if (btnDeck) btnDeck.style.background = 'none';
+        if (btnQuiz) btnQuiz.style.background = 'none';
+        if (btnDeck) btnDeck.className = "px-5 py-2.5 rounded-xl font-bold text-sm bg-white text-slate-700 border border-slate-200 shadow-sm transition hover:bg-slate-50";
+        if (btnQuiz) btnQuiz.className = "px-5 py-2.5 rounded-xl font-bold text-sm bg-white text-slate-700 border border-slate-200 shadow-sm transition hover:bg-slate-50";
+
+        if (mode === 'deck') {
+            if (btnDeck) {
+                btnDeck.className = "px-5 py-2.5 rounded-xl font-bold text-sm text-white border-0 shadow-md cursor-pointer transition active:scale-95";
+                btnDeck.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
+            }
+            document.getElementById('u4-deck-panel').classList.remove('hidden');
+            document.getElementById('u4-quiz-panel').classList.add('hidden');
+        } else if (mode === 'quiz') {
+            if (btnQuiz) {
+                btnQuiz.className = "px-5 py-2.5 rounded-xl font-bold text-sm text-white border-0 shadow-md cursor-pointer transition active:scale-95";
+                btnQuiz.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
+            }
+            document.getElementById('u4-deck-panel').classList.add('hidden');
+            document.getElementById('u4-quiz-panel').classList.remove('hidden');
+            this.startU4Quiz();
+        }
+    },
+
+    startU4Quiz() {
+        this.u4QuizScore = 0;
+        this.u4QuizIndex = 0;
+        this.u4QuizQuestions = [];
+
+        const allWords = [];
+        LESSON_DATA.unit4.bases.forEach(baseObj => {
+            Object.keys(baseObj.words).forEach(tone => {
+                allWords.push({
+                    base: baseObj.base,
+                    tone: tone,
+                    word: baseObj.words[tone].word,
+                    meaning: baseObj.words[tone].meaning,
+                    emoji: baseObj.words[tone].emoji,
+                    spell: baseObj.words[tone].spell
+                });
+            });
+        });
+
+        const shuffled = allWords.sort(() => 0.5 - Math.random());
+        this.u4QuizQuestions = shuffled.slice(0, 10);
+
+        const container = document.getElementById('u4-quiz-panel');
+        if (container) {
+            container.innerHTML = `
+                <div class="max-w-2xl mx-auto bg-white rounded-3xl shadow-lg border border-slate-100 p-6 md:p-8 text-center relative overflow-hidden box-border">
+                    <div class="flex justify-between items-center mb-4">
+                        <span class="text-xs font-bold text-slate-400 uppercase tracking-wider select-none">Luyện tập thêm dấu</span>
+                        <span id="u4-quiz-progress-text" class="text-xs font-bold text-slate-500 bg-slate-100 px-3 py-1 rounded-full select-none">Câu hỏi 1 / 10</span>
+                    </div>
+                    <div class="w-full h-2 bg-slate-100 rounded-full mb-6 overflow-hidden">
+                        <div id="u4-quiz-progress-bar" class="h-full bg-emerald-500 transition-all duration-300" style="width: 10%"></div>
+                    </div>
+                    <div class="my-6">
+                        <div id="u4-quiz-emoji" class="text-7xl md:text-8xl my-2 filter drop-shadow-md select-none animate-pulse-slow">🍆</div>
+                        <div id="u4-quiz-word-display" class="text-4xl md:text-5xl font-black text-slate-800 tracking-wide m-0 my-3">Quả c<span class="text-red-500 underline decoration-wavy decoration-2">à</span></div>
+                        <p id="u4-quiz-meaning-display" class="text-base md:text-lg font-bold text-slate-500 m-0">Ý nghĩa: Quả cà tím</p>
+                    </div>
+                    <div class="flex justify-center mb-6">
+                        <button onclick="app.playU4QuizVoice()" class="bg-emerald-50 hover:bg-emerald-100 active:scale-95 text-emerald-700 font-bold px-5 py-2.5 rounded-2xl border border-emerald-200 transition flex items-center gap-2 cursor-pointer">
+                            <i class="fa-solid fa-volume-high text-lg"></i>
+                            <span>Nghe giọng đọc</span>
+                        </button>
+                    </div>
+                    <div class="text-center mb-6">
+                        <p class="text-xs font-bold text-slate-400 mb-3 uppercase tracking-wider select-none">Bé hãy chọn dấu thanh phù hợp:</p>
+                        <div class="grid grid-cols-3 md:grid-cols-6 gap-3">
+                            <button onclick="app.submitU4QuizAnswer('không')" class="flex flex-col items-center gap-1 p-3.5 rounded-2xl border-2 border-slate-100 bg-slate-50 hover:bg-emerald-50 hover:border-emerald-300 active:scale-95 transition cursor-pointer">
+                                <span class="text-xl font-extrabold text-slate-800">a</span>
+                                <span class="text-[10px] text-slate-500 font-bold">Không dấu</span>
+                            </button>
+                            <button onclick="app.submitU4QuizAnswer('sắc')" class="flex flex-col items-center gap-1 p-3.5 rounded-2xl border-2 border-slate-100 bg-slate-50 hover:bg-emerald-50 hover:border-emerald-300 active:scale-95 transition cursor-pointer">
+                                <span class="text-xl font-extrabold text-slate-800">á</span>
+                                <span class="text-[10px] text-slate-500 font-bold">Dấu Sắc</span>
+                            </button>
+                            <button onclick="app.submitU4QuizAnswer('huyền')" class="flex flex-col items-center gap-1 p-3.5 rounded-2xl border-2 border-slate-100 bg-slate-50 hover:bg-emerald-50 hover:border-emerald-300 active:scale-95 transition cursor-pointer">
+                                <span class="text-xl font-extrabold text-slate-800">à</span>
+                                <span class="text-[10px] text-slate-500 font-bold">Dấu Huyền</span>
+                            </button>
+                            <button onclick="app.submitU4QuizAnswer('hỏi')" class="flex flex-col items-center gap-1 p-3.5 rounded-2xl border-2 border-slate-100 bg-slate-50 hover:bg-emerald-50 hover:border-emerald-300 active:scale-95 transition cursor-pointer">
+                                <span class="text-xl font-extrabold text-slate-800">ả</span>
+                                <span class="text-[10px] text-slate-500 font-bold">Dấu Hỏi</span>
+                            </button>
+                            <button onclick="app.submitU4QuizAnswer('ngã')" class="flex flex-col items-center gap-1 p-3.5 rounded-2xl border-2 border-slate-100 bg-slate-50 hover:bg-emerald-50 hover:border-emerald-300 active:scale-95 transition cursor-pointer">
+                                <span class="text-xl font-extrabold text-slate-800">ã</span>
+                                <span class="text-[10px] text-slate-500 font-bold">Dấu Ngã</span>
+                            </button>
+                            <button onclick="app.submitU4QuizAnswer('nặng')" class="flex flex-col items-center gap-1 p-3.5 rounded-2xl border-2 border-slate-100 bg-slate-50 hover:bg-emerald-50 hover:border-emerald-300 active:scale-95 transition cursor-pointer">
+                                <span class="text-xl font-extrabold text-slate-800">ạ</span>
+                                <span class="text-[10px] text-slate-500 font-bold">Dấu Nặng</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        this.renderU4QuizQuestion();
+    },
+
+    renderU4QuizQuestion() {
+        if (this.u4QuizIndex >= this.u4QuizQuestions.length) {
+            this.showU4QuizResults();
+            return;
+        }
+
+        const question = this.u4QuizQuestions[this.u4QuizIndex];
+        
+        const progressText = `Câu hỏi ${this.u4QuizIndex + 1} / ${this.u4QuizQuestions.length}`;
+        document.getElementById('u4-quiz-progress-text').textContent = progressText;
+        const progressPct = ((this.u4QuizIndex + 1) / this.u4QuizQuestions.length) * 100;
+        document.getElementById('u4-quiz-progress-bar').style.width = `${progressPct}%`;
+
+        document.getElementById('u4-quiz-emoji').textContent = question.emoji;
+        
+        const displayHtml = `Từ gốc: <span class="text-emerald-600 font-black">${question.base}</span> ➡️ Cần tạo chữ: <span class="text-red-600 font-black underline decoration-wavy decoration-3">${question.word.toUpperCase()}</span>`;
+        document.getElementById('u4-quiz-word-display').innerHTML = displayHtml;
+        document.getElementById('u4-quiz-meaning-display').textContent = `Ý nghĩa: ${question.meaning}`;
+
+        this.playU4QuizVoice();
+    },
+
+    playU4QuizVoice() {
+        const question = this.u4QuizQuestions[this.u4QuizIndex];
+        if (!question) return;
+
+        const promptText = `Bé hãy chọn dấu thanh để tạo thành chữ: ${question.word}`;
+        this.speakU4Text(promptText);
+    },
+
+    submitU4QuizAnswer(tone) {
+        const question = this.u4QuizQuestions[this.u4QuizIndex];
+        if (!question) return;
+
+        const isCorrect = (tone === question.tone);
+        
+        if (isCorrect) {
+            this.u4QuizScore++;
+            this.awardXP(10, 'Chính xác! 🎉');
+            this.updateU4XPDisplay();
+            
+            confetti({
+                particleCount: 80,
+                spread: 60,
+                origin: { y: 0.8 }
+            });
+
+            this.speakU4Text("Chính xác! Bé giỏi quá!");
+        } else {
+            this.speakU4Text(`Chưa chính xác rồi. Dấu đúng là dấu: ${this.u4TonesDict[question.tone] || question.tone}`);
+            this.showXPPopup(`Dấu đúng là: ${this.u4TonesDict[question.tone] || question.tone}`);
+        }
+
+        this.u4QuizIndex++;
+        setTimeout(() => {
+            this.renderU4QuizQuestion();
+        }, 2200);
+    },
+
+    showU4QuizResults() {
+        const container = document.getElementById('u4-quiz-panel');
+        if (!container) return;
+
+        const earnedXP = this.u4QuizScore * 10;
+        container.innerHTML = `
+            <div class="max-w-md mx-auto bg-white rounded-3xl shadow-lg border border-slate-100 p-8 text-center box-border animate-bounce-slow">
+                <div class="text-7xl my-4">🏆</div>
+                <h2 class="text-2xl font-extrabold text-slate-800 m-0 mb-2">Hoàn Thành Thử Thách!</h2>
+                <p class="text-slate-500 font-bold m-0 mb-6">Kết quả luyện tập của bé:</p>
+                
+                <div class="flex justify-center gap-6 mb-6">
+                    <div class="bg-emerald-50 px-5 py-3 rounded-2xl border border-emerald-100">
+                        <div class="text-xs text-emerald-600 font-bold uppercase tracking-wider">Đúng</div>
+                        <div class="text-2xl font-black text-emerald-700">${this.u4QuizScore} / 10</div>
+                    </div>
+                    <div class="bg-amber-50 px-5 py-3 rounded-2xl border border-amber-100">
+                        <div class="text-xs text-amber-600 font-bold uppercase tracking-wider">XP Nhận</div>
+                        <div class="text-2xl font-black text-amber-700">+${earnedXP} XP</div>
+                    </div>
+                </div>
+
+                <div class="flex flex-col gap-3">
+                    <button onclick="app.startU4Quiz()" class="bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-bold text-lg py-3.5 rounded-2xl shadow-md border-0 cursor-pointer transition active:scale-95">
+                        🔄 Chơi Lại
+                    </button>
+                    <button onclick="app.switchU4Mode('deck')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-sm py-3 rounded-2xl border-0 cursor-pointer transition active:scale-95">
+                        ⬅️ Quay Lại Bé Tập Đọc
+                    </button>
+                </div>
+            </div>
+        `;
     },
 
     speakTextAsync(text, rate = 0.7) {

@@ -377,5 +377,247 @@ const LESSON_DATA = {
             "welcome children with \"Taiiku.\"",
             "Let's give them a big round of applause and enjoy the show!"
         ]
+    },
+    "unit4": {
+        title: "Unit 4: Tập Đánh Vần Tiếng Việt",
+        bases: [
+            {
+                base: "ba",
+                spelling: "bờ - a - ba",
+                words: {
+                    "không": { word: "ba", meaning: "Số ba hoặc Ba (bố)", emoji: "👨", spell: "bờ - a - ba" },
+                    "sắc": { word: "bá", meaning: "Bá vương / Bác", emoji: "👑", spell: "bờ - a - ba - sắc - bá" },
+                    "huyền": { word: "bà", meaning: "Bà nội / Bà ngoại", emoji: "👵", spell: "bờ - a - ba - huyền - bà" },
+                    "hỏi": { word: "bả", meaning: "Bả mồi / Bả vai", emoji: "🍖", spell: "bờ - a - ba - hỏi - bả" },
+                    "ngã": { word: "bã", meaning: "Bã mía / Xác bã", emoji: "🗑️", spell: "bờ - a - ba - ngã - bã" },
+                    "nặng": { word: "bạ", meaning: "Học bạ / Viết bạ", emoji: "📒", spell: "bờ - a - ba - nặng - bạ" }
+                }
+            },
+            {
+                base: "ca",
+                spelling: "cờ - a - ca",
+                words: {
+                    "không": { word: "ca", meaning: "Ca hát / Cái ca", emoji: "🎤", spell: "cờ - a - ca" },
+                    "sắc": { word: "cá", meaning: "Con cá", emoji: "🐟", spell: "cờ - a - ca - sắc - cá" },
+                    "huyền": { word: "cà", meaning: "Quả cà", emoji: "🍆", spell: "cờ - a - ca - huyền - cà" },
+                    "hỏi": { word: "cả", meaning: "Tất cả / Anh cả", emoji: "🥇", spell: "cờ - a - ca - hỏi - cả" },
+                    "nặng": { word: "cạ", meaning: "Bạn cạ", emoji: "🤝", spell: "cờ - a - ca - nặng - cạ" }
+                }
+            },
+            {
+                base: "ma",
+                spelling: "mờ - a - ma",
+                words: {
+                    "không": { word: "ma", meaning: "Con ma", emoji: "👻", spell: "mờ - a - ma" },
+                    "sắc": { word: "má", meaning: "Má (mẹ) / Cái má", emoji: "👩", spell: "mờ - a - ma - sắc - má" },
+                    "huyền": { word: "mà", meaning: "Nhưng mà", emoji: "🪧", spell: "mờ - a - ma - huyền - mà" },
+                    "hỏi": { word: "mả", meaning: "Ngôi mả", emoji: "🪦", spell: "mờ - a - ma - hỏi - mả" },
+                    "ngã": { word: "mã", meaning: "Con ngựa / Mã số", emoji: "🐎", spell: "mờ - a - ma - ngã - mã" },
+                    "nặng": { word: "mạ", meaning: "Cây mạ", emoji: "🌱", spell: "mờ - a - ma - nặng - mạ" }
+                }
+            },
+            {
+                base: "bo",
+                spelling: "bờ - o - bo",
+                words: {
+                    "không": { word: "bo", meaning: "Bo góc / Bánh bo", emoji: "📐", spell: "bờ - o - bo" },
+                    "sắc": { word: "bó", meaning: "Bó hoa", emoji: "💐", spell: "bờ - o - bo - sắc - bó" },
+                    "huyền": { word: "bò", meaning: "Con bò", emoji: "🐄", spell: "bờ - o - bo - huyền - bò" },
+                    "hỏi": { word: "bỏ", meaning: "Bỏ rác / Từ bỏ", emoji: "🗑️", spell: "bờ - o - bo - hỏi - bỏ" },
+                    "nặng": { word: "bọ", meaning: "Con bọ / Bọ cánh cứng", emoji: "🐞", spell: "bờ - o - bo - nặng - bọ" }
+                }
+            },
+            {
+                base: "co",
+                spelling: "cờ - o - co",
+                words: {
+                    "không": { word: "co", meaning: "Co giãn", emoji: "🪢", spell: "cờ - o - co" },
+                    "sắc": { word: "có", meaning: "Có tiền / Có đồ", emoji: "💰", spell: "cờ - o - co - sắc - có" },
+                    "huyền": { word: "cò", meaning: "Con cò", emoji: "🦩", spell: "cờ - o - co - huyền - cò" },
+                    "hỏi": { word: "cỏ", meaning: "Cỏ xanh", emoji: "🌿", spell: "cờ - o - co - hỏi - cỏ" },
+                    "nặng": { word: "cọ", meaning: "Cây cọ / Chổi cọ", emoji: "🖌️", spell: "cờ - o - co - nặng - cọ" }
+                }
+            },
+            {
+                base: "ga",
+                spelling: "gờ - a - ga",
+                words: {
+                    "không": { word: "ga", meaning: "Nhà ga", emoji: "🚉", spell: "gờ - a - ga" },
+                    "sắc": { word: "gá", meaning: "Gá lắp / Gá đỡ", emoji: "🔧", spell: "gờ - a - ga - sắc - gá" },
+                    "huyền": { word: "gà", meaning: "Con gà", emoji: "🐓", spell: "gờ - a - ga - huyền - gà" },
+                    "hỏi": { word: "gả", meaning: "Gả chồng", emoji: "👰", spell: "gờ - a - ga - hỏi - gả" },
+                    "nặng": { word: "gạ", meaning: "Gạ gẫm / Gạ hỏi", emoji: "🗣️", spell: "gờ - a - ga - nặng - gạ" }
+                }
+            },
+            {
+                base: "la",
+                spelling: "lờ - a - la",
+                words: {
+                    "không": { word: "la", meaning: "La hét / Nốt la", emoji: "🗣️", spell: "lờ - a - la" },
+                    "sắc": { word: "lá", meaning: "Chiếc lá", emoji: "🍃", spell: "lờ - a - la - sắc - lá" },
+                    "huyền": { word: "là", meaning: "Bàn là (ủi)", emoji: "💨", spell: "lờ - a - la - huyền - là" },
+                    "hỏi": { word: "lả", meaning: "Mệt lả", emoji: "😫", spell: "lờ - a - la - hỏi - lả" },
+                    "nặng": { word: "lạ", meaning: "Người lạ", emoji: "👤", spell: "lờ - a - la - nặng - lạ" }
+                }
+            },
+            {
+                base: "le",
+                spelling: "lờ - e - le",
+                words: {
+                    "không": { word: "le", meaning: "Le le (chim)", emoji: "👅", spell: "lờ - e - le" },
+                    "sắc": { word: "lé", meaning: "Mắt lé", emoji: "🤪", spell: "lờ - e - le - sắc - lé" },
+                    "huyền": { word: "lè", meaning: "Lè lưỡi", emoji: "😜", spell: "lờ - e - le - huyền - lè" },
+                    "hỏi": { word: "lẻ", meaning: "Số lẻ / Tiền lẻ", emoji: "1️⃣", spell: "lờ - e - le - hỏi - lẻ" },
+                    "nặng": { word: "lẹ", meaning: "Nhanh lẹ", emoji: "⚡", spell: "lờ - e - le - nặng - lẹ" }
+                }
+            },
+            {
+                base: "lo",
+                spelling: "lờ - o - lo",
+                words: {
+                    "không": { word: "lo", meaning: "Lo lắng", emoji: "😟", spell: "lờ - o - lo" },
+                    "sắc": { word: "ló", meaning: "Ló dạng / Mặt trời ló", emoji: "🌅", spell: "lờ - o - lo - sắc - ló" },
+                    "huyền": { word: "lò", meaning: "Cái lò sưởi", emoji: "🔥", spell: "lờ - o - lo - huyền - lò" },
+                    "hỏi": { word: "lỏ", meaning: "Lỏ mặt / Biểu cảm lỏ", emoji: "🤐", spell: "lờ - o - lo - hỏi - lỏ" },
+                    "nặng": { word: "lọ", meaning: "Cái lọ hoa", emoji: "🏺", spell: "lờ - o - lo - nặng - lọ" }
+                }
+            },
+            {
+                base: "me",
+                spelling: "mờ - e - me",
+                words: {
+                    "không": { word: "me", meaning: "Quả me chua", emoji: "🥭", spell: "mờ - e - me" },
+                    "sắc": { word: "mé", meaning: "Bờ mé sông", emoji: "🌊", spell: "mờ - e - me - sắc - mé" },
+                    "huyền": { word: "mè", meaning: "Hạt mè (vừng)", emoji: "🥯", spell: "mờ - e - me - huyền - mè" },
+                    "hỏi": { word: "mẻ", meaning: "Chén mẻ / Mẻ bánh", emoji: "🥣", spell: "mờ - e - me - hỏi - mẻ" },
+                    "nặng": { word: "mẹ", meaning: "Mẹ yêu", emoji: "👩‍👦", spell: "mờ - e - me - nặng - mẹ" }
+                }
+            },
+            {
+                base: "to",
+                spelling: "tờ - o - to",
+                words: {
+                    "không": { word: "to", meaning: "To lớn", emoji: "🐘", spell: "tờ - o - to" },
+                    "sắc": { word: "tó", meaning: "Bị bắt tó", emoji: "👮", spell: "tờ - o - to - sắc - tó" },
+                    "huyền": { word: "tò", meaning: "Tò he / Tò mò", emoji: "🧸", spell: "tờ - o - to - huyền - tò" },
+                    "hỏi": { word: "tỏ", meaning: "Bày tỏ / Sáng tỏ", emoji: "💖", spell: "tờ - o - to - hỏi - tỏ" },
+                    "nặng": { word: "tọ", meaning: "Tọ lòng", emoji: "🤝", spell: "tờ - o - to - nặng - tọ" }
+                }
+            },
+            {
+                base: "da",
+                spelling: "dờ - a - da",
+                words: {
+                    "không": { word: "da", meaning: "Làn da", emoji: "🖐️", spell: "dờ - a - da" },
+                    "huyền": { word: "dà", meaning: "Dày dà", emoji: "📜", spell: "dờ - a - da - huyền - dà" },
+                    "ngã": { word: "dã", meaning: "Dã ngoại", emoji: "⛺", spell: "dờ - a - da - ngã - dã" },
+                    "nặng": { word: "dạ", meaning: "Dạ dày / Vâng dạ", emoji: "🙇", spell: "dờ - a - da - nặng - dạ" }
+                }
+            },
+            {
+                base: "đa",
+                spelling: "đờ - a - đa",
+                words: {
+                    "không": { word: "đa", meaning: "Cây đa", emoji: "🌳", spell: "đờ - a - đa" },
+                    "sắc": { word: "đá", meaning: "Hòn đá / Đá bóng", emoji: "🪨", spell: "đờ - a - đa - sắc - đá" },
+                    "huyền": { word: "đà", meaning: "Đà gỗ / Đà điểu", emoji: "🪵", spell: "đờ - a - đa - huyền - đà" },
+                    "hỏi": { word: "đả", meaning: "Đả kích / Đánh đả", emoji: "🥊", spell: "đờ - a - đa - hỏi - đả" },
+                    "ngã": { word: "đã", meaning: "Đã xong / Đã đời", emoji: "⌛", spell: "đờ - a - đa - ngã - đã" }
+                }
+            },
+            {
+                base: "gia",
+                spelling: "giờ - a - gia",
+                words: {
+                    "không": { word: "gia", meaning: "Gia đình / Thêm gia vị", emoji: "👪", spell: "giờ - a - gia" },
+                    "sắc": { word: "giá", meaning: "Giá tiền / Giá đỗ", emoji: "🌱", spell: "giờ - a - gia - sắc - giá" },
+                    "huyền": { word: "già", meaning: "Người già", emoji: "👴", spell: "giờ - a - gia - huyền - già" },
+                    "hỏi": { word: "giả", meaning: "Đồ giả / Giả vờ", emoji: "🎭", spell: "giờ - a - gia - hỏi - giả" }
+                }
+            },
+            {
+                base: "nha",
+                spelling: "nhờ - a - nha",
+                words: {
+                    "không": { word: "nha", meaning: "Nha khoa (răng)", emoji: "🦷", spell: "nhờ - a - nha" },
+                    "sắc": { word: "nhá", meaning: "Nhá nhem / Nhá bánh", emoji: "🌆", spell: "nhờ - a - nha - sắc - nhá" },
+                    "huyền": { word: "nhà", meaning: "Ngôi nhà", emoji: "🏠", spell: "nhờ - a - nha - huyền - nhà" },
+                    "hỏi": { word: "nhả", meaning: "Nhả kẹo / Nhả ra", emoji: "🤮", spell: "nhờ - a - nha - hỏi - nhả" }
+                }
+            },
+            {
+                base: "cho",
+                spelling: "chờ - o - cho",
+                words: {
+                    "không": { word: "cho", meaning: "Cho đi / Cho quà", emoji: "🎁", spell: "chờ - o - cho" },
+                    "sắc": { word: "chó", meaning: "Con chó", emoji: "🐶", spell: "chờ - o - cho - sắc - chó" },
+                    "huyền": { word: "chò", meaning: "Cây chò chỉ", emoji: "🌲", spell: "chờ - o - cho - huyền - chò" },
+                    "hỏi": { word: "chỏ", meaning: "Chỏm tóc / Chỏ tai", emoji: "👦", spell: "chờ - o - cho - hỏi - chỏ" }
+                }
+            },
+            {
+                base: "che",
+                spelling: "chờ - e - che",
+                words: {
+                    "không": { word: "che", meaning: "Che ô / Che chở", emoji: "🌂", spell: "chờ - e - che" },
+                    "sắc": { word: "ché", meaning: "Cái ché rượu", emoji: "🏺", spell: "chờ - e - che - sắc - ché" },
+                    "huyền": { word: "chè", meaning: "Chén chè / Lá chè", emoji: "🍵", spell: "chờ - e - che - huyền - chè" },
+                    "hỏi": { word: "chẻ", meaning: "Chẻ củi / Chẻ tre", emoji: "🪓", spell: "chờ - e - che - hỏi - chẻ" }
+                }
+            },
+            {
+                base: "thi",
+                spelling: "thờ - i - thi",
+                words: {
+                    "không": { word: "thi", meaning: "Thi cử / Đi thi", emoji: "📝", spell: "thờ - i - thi" },
+                    "sắc": { word: "thí", meaning: "Thí nghiệm / Bố thí", emoji: "🔬", spell: "thờ - i - thi - sắc - thí" },
+                    "huyền": { word: "thì", meaning: "Rau thì là", emoji: "🌿", spell: "thờ - i - thi - huyền - thì" },
+                    "nặng": { word: "thị", meaning: "Quả thị thơm", emoji: "🟡", spell: "thờ - i - thi - nặng - thị" }
+                }
+            },
+            {
+                base: "thu",
+                spelling: "thờ - u - thu",
+                words: {
+                    "không": { word: "thu", meaning: "Mùa thu", emoji: "🍁", spell: "thờ - u - thu" },
+                    "sắc": { word: "thú", meaning: "Con thú hoang", emoji: "🦁", spell: "thờ - u - thu - sắc - thú" },
+                    "huyền": { word: "thù", meaning: "Kẻ thù / Hận thù", emoji: "👿", spell: "thờ - u - thu - huyền - thù" },
+                    "hỏi": { word: "thủ", meaning: "Thủ môn / Thủ đô", emoji: "🧤", spell: "thờ - u - thu - hỏi - thủ" },
+                    "nặng": { word: "thụ", meaning: "Cây cổ thụ", emoji: "🌳", spell: "thờ - u - thu - nặng - thụ" }
+                }
+            },
+            {
+                base: "ta",
+                spelling: "tờ - a - ta",
+                words: {
+                    "không": { word: "ta", meaning: "Chúng ta", emoji: "👥", spell: "tờ - a - ta" },
+                    "sắc": { word: "tá", meaning: "Một tá (12 chiếc)", emoji: "1️⃣2️⃣", spell: "tờ - a - ta - sắc - tá" },
+                    "huyền": { word: "tà", meaning: "Tà áo dài", emoji: "👗", spell: "tờ - a - ta - huyền - tà" },
+                    "hỏi": { word: "tả", meaning: "Tả bỉm em bé", emoji: "👶", spell: "tờ - a - ta - hỏi - tả" },
+                    "ngã": { word: "tã", meaning: "Tã lót / Mệt tã", emoji: "🧷", spell: "tờ - a - ta - ngã - tã" },
+                    "nặng": { word: "tạ", meaning: "Quả tạ tập gym", emoji: "🏋️", spell: "tờ - a - ta - nặng - tạ" }
+                }
+            },
+            {
+                base: "cao",
+                spelling: "cờ - ao - cao",
+                words: {
+                    "không": { word: "cao", meaning: "Chiều cao / Cây cao", emoji: "🦒", spell: "cờ - ao - cao" },
+                    "sắc": { word: "cáo", meaning: "Con cáo", emoji: "🦊", spell: "cờ - ao - cao - sắc - cáo" },
+                    "huyền": { word: "cào", meaning: "Con cào cào", emoji: "🦗", spell: "cờ - ao - cao - huyền - cào" },
+                    "hỏi": { word: "cảo", meaning: "Bản thảo / Sách cảo", emoji: "📄", spell: "cờ - ao - cao - hỏi - cảo" },
+                    "nặng": { word: "cạo", meaning: "Cạo râu", emoji: "🪒", spell: "cờ - ao - cao - nặng - cạo" }
+                }
+            },
+            {
+                base: "tay",
+                spelling: "tờ - ay - tay",
+                words: {
+                    "không": { word: "tay", meaning: "Bàn tay", emoji: "🖐️", spell: "tờ - ay - tay" },
+                    "huyền": { word: "tày", meaning: "Dân tộc Tày", emoji: "⚖️", spell: "tờ - ay - tay - huyền - tày" },
+                    "hỏi": { word: "tẩy", meaning: "Cục tẩy / Tẩy xóa", emoji: "🧼", spell: "tờ - ay - tay - hỏi - tẩy" }
+                }
+            }
+        ]
     }
 };
