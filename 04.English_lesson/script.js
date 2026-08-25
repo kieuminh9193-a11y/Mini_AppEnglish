@@ -1777,6 +1777,21 @@ const app = {
     },
 
     initU4() {
+        if (!window.LESSON_DATA || !window.LESSON_DATA.unit4) {
+            console.error("LESSON_DATA.unit4 is not loaded! Possibly a caching issue.");
+            alert("Đang tải dữ liệu bài học mới, bé vui lòng tải lại trang (hoặc vuốt xuống để tải lại) nhé!");
+            this.showView('home-view');
+            return;
+        }
+
+        // Load active pet if selectedPetType is empty
+        if (!this.selectedPetType && typeof petManager !== 'undefined') {
+            const activePet = petManager.getActivePet();
+            if (activePet) {
+                this.selectedPetType = activePet.petType;
+            }
+        }
+
         this.u4CurrentBaseIndex = 0;
         this.u4CurrentTone = 'không';
         this.u4ActiveMode = 'deck';
@@ -1801,7 +1816,12 @@ const app = {
     },
 
     updateU4XPDisplay() {
-        const xpText = `${petManager.xp} XP`;
+        let currentXP = 0;
+        if (typeof petManager !== 'undefined') {
+            const data = petManager.load();
+            currentXP = data.availableXP || 0;
+        }
+        const xpText = `${currentXP} XP`;
         const u4Xp = document.getElementById('unit4-xp-text');
         if (u4Xp) u4Xp.textContent = xpText;
         
