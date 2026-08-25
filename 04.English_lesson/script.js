@@ -1777,7 +1777,7 @@ const app = {
     },
 
     initU4() {
-        if (!window.LESSON_DATA || !window.LESSON_DATA.unit4) {
+        if (typeof LESSON_DATA === 'undefined' || !LESSON_DATA.unit4) {
             console.error("LESSON_DATA.unit4 is not loaded! Possibly a caching issue.");
             alert("Đang tải dữ liệu bài học mới, bé vui lòng tải lại trang (hoặc vuốt xuống để tải lại) nhé!");
             this.showView('home-view');
