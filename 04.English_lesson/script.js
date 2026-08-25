@@ -1908,23 +1908,69 @@ const app = {
 
     speakU4Text(text, rate = 0.85) {
         return new Promise((resolve) => {
+            // Hủy giọng đọc WebSpeech hiện tại nếu có
             window.speechSynthesis.cancel();
-            setTimeout(() => {
-                const utterance = new SpeechSynthesisUtterance(text);
-                const voices = window.speechSynthesis.getVoices();
-                const viVoice = voices.find(v => v.lang.toLowerCase().startsWith('vi'));
-                if (viVoice) {
-                    utterance.voice = viVoice;
-                }
-                utterance.lang = 'vi-VN';
-                utterance.rate = rate;
-                utterance.onend = () => resolve();
-                utterance.onerror = (e) => {
-                    console.error("SpeechSynthesis error:", e);
-                    resolve();
-                };
-                window.speechSynthesis.speak(utterance);
-            }, 80);
+
+            // Sử dụng Google Translate TTS để có giọng đọc tiếng Việt chuẩn, tự nhiên nhất
+            const ttsUrl = `https://translate.google.com/translate_tts?ie=UTF-8&tl=vi&client=tw-ob&q=${encodeURIComponent(text)}`;
+            const audio = new Audio(ttsUrl);
+            
+            // Đảm bảo tốc độ đọc được thiết lập khi tải xong metadata
+            audio.onloadedmetadata = () => {
+                audio.playbackRate = rate;
+            };
+
+            let fallbackTimeout = setTimeout(() => {
+                cleanup();
+                useWebSpeech();
+            }, 1800); // Đợi tối đa 1.8s, nếu không phát được sẽ chuyển sang WebSpeech
+
+            function cleanup() {
+                clearTimeout(fallbackTimeout);
+                audio.onplaying = null;
+                audio.onended = null;
+                audio.onerror = null;
+                audio.onloadedmetadata = null;
+            }
+
+            audio.onplaying = () => {
+                clearTimeout(fallbackTimeout);
+            };
+
+            audio.onended = () => {
+                cleanup();
+                resolve();
+            };
+
+            audio.onerror = () => {
+                cleanup();
+                useWebSpeech();
+            };
+
+            audio.play().catch(() => {
+                cleanup();
+                useWebSpeech();
+            });
+
+            // Hàm fallback dùng công cụ Web Speech Synthesis của thiết bị
+            function useWebSpeech() {
+                setTimeout(() => {
+                    const utterance = new SpeechSynthesisUtterance(text);
+                    const voices = window.speechSynthesis.getVoices();
+                    const viVoice = voices.find(v => v.lang.toLowerCase().startsWith('vi'));
+                    if (viVoice) {
+                        utterance.voice = viVoice;
+                    }
+                    utterance.lang = 'vi-VN';
+                    utterance.rate = rate;
+                    utterance.onend = () => resolve();
+                    utterance.onerror = (e) => {
+                        console.error("SpeechSynthesis fallback error:", e);
+                        resolve();
+                    };
+                    window.speechSynthesis.speak(utterance);
+                }, 50);
+            }
         });
     },
 
