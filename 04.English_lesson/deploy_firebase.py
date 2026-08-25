@@ -120,8 +120,11 @@ ver = api("POST", "sites/" + SITE_ID + "/versions", token, {
     "config": {
         "rewrites": [{"glob": "**", "path": "/index.html"}],
         "headers": [
-            {"glob": "**/*.js", "headers": {"Cache-Control": "no-cache"}},
-            {"glob": "**/*.css", "headers": {"Cache-Control": "no-cache"}}
+            {"glob": "/", "headers": {"Cache-Control": "no-cache, no-store, must-revalidate"}},
+            {"glob": "/index.html", "headers": {"Cache-Control": "no-cache, no-store, must-revalidate"}},
+            {"glob": "**/*.html", "headers": {"Cache-Control": "no-cache, no-store, must-revalidate"}},
+            {"glob": "**/*.js", "headers": {"Cache-Control": "no-cache, no-store, must-revalidate"}},
+            {"glob": "**/*.css", "headers": {"Cache-Control": "no-cache, no-store, must-revalidate"}}
         ]
     }
 })
