@@ -1839,9 +1839,9 @@ const app = {
         container.innerHTML = bases.map((b, idx) => {
             const activeClass = (idx === this.u4CurrentBaseIndex) ? 'border-emerald-500 bg-emerald-50 text-emerald-800' : 'border-slate-100 bg-white text-slate-700';
             return `
-                <button onclick="app.selectU4Base(${idx})" class="w-full text-left p-3.5 rounded-2xl border-2 font-black text-lg transition duration-200 cursor-pointer flex items-center justify-between ${activeClass}">
+                <button onclick="app.selectU4Base(${idx})" class="min-w-[90px] lg:w-full text-center lg:text-left p-3 lg:p-3.5 rounded-2xl border-2 font-black text-sm lg:text-lg transition duration-200 cursor-pointer flex flex-col lg:flex-row items-center lg:justify-between gap-1 lg:gap-0 flex-shrink-0 ${activeClass}">
                     <span>${b.base}</span>
-                    <span class="text-xs font-bold text-slate-400 bg-slate-100 px-2.5 py-1 rounded-full">${Object.keys(b.words).length} từ</span>
+                    <span class="text-[9px] lg:text-xs font-bold text-slate-400 bg-slate-100 px-2.5 py-1 rounded-full whitespace-nowrap">${Object.keys(b.words).length} từ</span>
                 </button>
             `;
         }).join('');
@@ -1901,7 +1901,7 @@ const app = {
         if (!wordData) return;
 
         const spellText = wordData.spell.replace(/-/g, ', ');
-        const speechString = `${spellText}, ... , ${wordData.word}`;
+        const speechString = `${spellText}, , ${wordData.word}`;
         
         this.speakU4Text(speechString);
     },
@@ -1909,16 +1909,22 @@ const app = {
     speakU4Text(text, rate = 0.85) {
         return new Promise((resolve) => {
             window.speechSynthesis.cancel();
-            const utterance = new SpeechSynthesisUtterance(text);
-            const viVoice = window.speechSynthesis.getVoices().find(v => v.lang.startsWith('vi'));
-            if (viVoice) {
-                utterance.voice = viVoice;
-            }
-            utterance.lang = 'vi-VN';
-            utterance.rate = rate;
-            utterance.onend = () => resolve();
-            utterance.onerror = () => resolve();
-            window.speechSynthesis.speak(utterance);
+            setTimeout(() => {
+                const utterance = new SpeechSynthesisUtterance(text);
+                const voices = window.speechSynthesis.getVoices();
+                const viVoice = voices.find(v => v.lang.toLowerCase().startsWith('vi'));
+                if (viVoice) {
+                    utterance.voice = viVoice;
+                }
+                utterance.lang = 'vi-VN';
+                utterance.rate = rate;
+                utterance.onend = () => resolve();
+                utterance.onerror = (e) => {
+                    console.error("SpeechSynthesis error:", e);
+                    resolve();
+                };
+                window.speechSynthesis.speak(utterance);
+            }, 80);
         });
     },
 
@@ -2126,13 +2132,18 @@ const app = {
     speakTextAsync(text, rate = 0.7) {
         return new Promise((resolve) => {
             window.speechSynthesis.cancel();
-            const utterance = new SpeechSynthesisUtterance(text);
-            utterance.lang = 'en-US';
-            utterance.rate = rate;
-            this.applyMCSelectedVoice(utterance);
-            utterance.onend = () => resolve();
-            utterance.onerror = () => resolve();
-            window.speechSynthesis.speak(utterance);
+            setTimeout(() => {
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'en-US';
+                utterance.rate = rate;
+                this.applyMCSelectedVoice(utterance);
+                utterance.onend = () => resolve();
+                utterance.onerror = (e) => {
+                    console.error("SpeechSynthesis error:", e);
+                    resolve();
+                };
+                window.speechSynthesis.speak(utterance);
+            }, 80);
         });
     }
 };
